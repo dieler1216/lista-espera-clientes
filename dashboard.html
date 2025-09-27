@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Personal | Gestión de Clientes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a202c 100%);
+            min-height: 100vh;
+            color: #e2e8f0;
+            padding: 20px;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 25px 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h1 {
+            color: #ffffff;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #0066cc, #ff8800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #a0aec0;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(0, 102, 204, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #0066cc, #ff8800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            color: #a0aec0;
+            font-size: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .controls {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            padding: 25px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-container {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 50px 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #0066cc;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #a0aec0;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 18px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #0066cc;
+            border-color: #0066cc;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #0066cc, #004499);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #059669, #047857);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .content-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .content-count {
+            color: #a0aec0;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .client-list {
+            max-height: 70vh;
+            overflow-y: auto;
+            padding: 0;
+        }
+
+        .client-card {
+            padding: 25px 30px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .client-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .client-card:last-child {
+            border-bottom: none;
+        }
+
+        .client-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .client-main-info h3 {
+            color: white;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .client-contact {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .contact-item {
+            color: #a0aec0;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .client-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending {
+            background: rgba(255, 165, 0, 0.2);
+            color: #ffa500;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+        }
+
+        .status-contacted {
+            background: rgba(0, 102, 204, 0.2);
+            color: #0066cc;
+            border: 1px solid rgba(0, 102, 204, 0.3);
+        }
+
+        .status-completed {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .client-details {
+            margin-bottom: 15px;
+        }
+
+        .detail-row {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            min-width: 120px;
+            color: #cbd5e0;
+            font-size: 0.95rem;
+        }
+
+        .detail-value {
+            color: #e2e8f0;
+            flex: 1;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .timestamp {
+            background: rgba(0, 102, 204, 0.1);
+            color: #0066cc;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            color: #a0aec0;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #cbd5e0;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        .quick-actions {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+        }
+
+        .fab {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #0066cc, #ff8800);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 35px rgba(0, 102, 204, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Dashboard Personal</h1>
+        <p>Gestión completa de clientes y oportunidades de negocio</p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number" id="totalClients">0</div>
+            <div class="stat-label">Total Clientes</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="pendingClients">0</div>
+            <div class="stat-label">Por Contactar</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="contactedClients">0</div>
+            <div class="stat-label">En Proceso</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="completedClients">0</div>
+            <div class="stat-label">Completados</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="search-container">
+            <input type="text" class="search-input" id="searchInput" placeholder="Buscar por nombre, email o teléfono...">
+            <span class="search-icon">🔍</span>
+        </div>
+
+        <div class="filter-buttons">
+            <button class="filter-btn active" onclick="setFilter('all')">Todos</button>
+            <button class="filter-btn" onclick="setFilter('pending')">Por Contactar</button>
+            <button class="filter-btn" onclick="setFilter('contacted')">En Proceso</button>
+            <button class="filter-btn" onclick="setFilter('completed')">Completados</button>
+        </div>
+
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="exportToCSV()">📊 Exportar Clientes</button>
+            <button class="btn btn-primary" onclick="exportBillingToExcel()">💰 Exportar Facturación</button>
+            <button class="btn btn-warning" onclick="clearAllData()">🗑️ Limpiar</button>
+            <a href="lista-espera-backup.html" class="btn btn-success">← Volver al Portal</a>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="content-header">
+            <h2 class="content-title">Lista de Clientes</h2>
+            <span class="content-count" id="clientCount">0 clientes</span>
+        </div>
+
+        <div class="client-list" id="clientList">
+            <div class="empty-state">
+                <h3>📋 No hay clientes registrados</h3>
+                <p>Los nuevos registros aparecerán aquí automáticamente</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <button class="fab" onclick="refreshData()" title="Actualizar datos">🔄</button>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZTb22-_5E6BE9uGC9Z7oXPbD79yoosV0",
+            authDomain: "lista-espera-clientes.firebaseapp.com",
+            projectId: "lista-espera-clientes",
+            storageBucket: "lista-espera-clientes.firebasestorage.app",
+            messagingSenderId: "485464157193",
+            appId: "1:485464157193:web:7cc7af333678a229e6dcd8"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let clientData = [];
+        let filteredData = [];
+        let currentFilter = 'all';
+        let billingData = [];
+
+        function loadData() {
+            // Try Firebase first, fallback to localStorage
+            Promise.all([
+                db.collection('waitingList').orderBy('createdAt', 'desc').get(),
+                db.collection('billingData').get()
+            ]).then(([clientSnapshot, billingSnapshot]) => {
+                clientData = [];
+                clientSnapshot.forEach(doc => {
+                    clientData.push({ id: doc.id, ...doc.data() });
+                });
+
+                billingData = [];
+                billingSnapshot.forEach(doc => {
+                    billingData.push({ id: doc.id, ...doc.data() });
+                });
+
+                updateDisplay();
+            }).catch(error => {
+                console.log('Using localStorage fallback');
+                clientData = JSON.parse(localStorage.getItem('waitingList')) || [];
+                billingData = JSON.parse(localStorage.getItem('billingData')) || [];
+                clientData.sort((a, b) => (b.id || 0) - (a.id || 0));
+                updateDisplay();
+            });
+        }
+
+        function updateDisplay() {
+            filteredData = [...clientData];
+            updateStats();
+            applyCurrentFilter();
+            renderClients();
+        }
+
+        function updateStats() {
+            const total = clientData.length;
+            const pending = clientData.filter(c => c.status === 'pending').length;
+            const contacted = clientData.filter(c => c.status === 'contacted').length;
+            const completed = clientData.filter(c => c.status === 'completed').length;
+
+            document.getElementById('totalClients').textContent = total;
+            document.getElementById('pendingClients').textContent = pending;
+            document.getElementById('contactedClients').textContent = contacted;
+            document.getElementById('completedClients').textContent = completed;
+        }
+
+        function renderClients() {
+            const container = document.getElementById('clientList');
+            const count = document.getElementById('clientCount');
+
+            count.textContent = `${filteredData.length} cliente${filteredData.length !== 1 ? 's' : ''}`;
+
+            if (filteredData.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>🔍 No se encontraron clientes</h3>
+                        <p>Intenta modificar los filtros de búsqueda</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredData.map(client => `
+                <div class="client-card">
+                    <div class="client-header">
+                        <div class="client-main-info">
+                            <h3>${client.name}</h3>
+                            <div class="client-contact">
+                                <div class="contact-item">
+                                    <span>📧</span> ${client.email}
+                                </div>
+                                <div class="contact-item">
+                                    <span>📱</span> ${client.phone}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-actions">
+                            <span class="status-badge status-${client.status}">${getStatusText(client.status)}</span>
+                            <button class="btn btn-primary client-contact-btn"
+                                    ${client.status === 'contacted' || client.status === 'completed' ? 'style="opacity:0.5"' : ''}>
+                                ✉️ Contactar
+                            </button>
+                            <button class="btn btn-success client-complete-btn"
+                                    ${client.status === 'completed' ? 'style="opacity:0.5"' : ''}>
+                                ✅ Completar y Facturar
+                            </button>
+                            <button class="btn btn-danger client-remove-btn">🗑️</button>
+                        </div>
+                    </div>
+
+                    <div class="client-details">
+                        ${client.comments ? `
+                        <div class="detail-row">
+                            <div class="detail-label">Comentarios:</div>
+                            <div class="detail-value">${client.comments}</div>
+                        </div>
+                        ` : ''}
+                        <div class="detail-row">
+                            <div class="detail-label">Registrado:</div>
+                            <div class="detail-value">
+                                <span class="timestamp">${client.timestamp}</span>
+                            </div>
+                        </div>
+                        <div class="detail-row">
+                            <div class="detail-label">Posición:</div>
+                            <div class="detail-value">#${clientData.findIndex(c => c.id === client.id) + 1}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'Por Contactar',
+                'contacted': 'En Proceso',
+                'completed': 'Completado'
+            };
+            return statusMap[status] || status;
+        }
+
+        function changeStatus(id, newStatus) {
+            db.collection('waitingList').doc(id).update({
+                status: newStatus
+            }).then(() => {
+                loadData();
+            }).catch(error => {
+                // Fallback to localStorage
+                const client = clientData.find(c => c.id === id);
+                if (client) {
+                    client.status = newStatus;
+                    localStorage.setItem('waitingList', JSON.stringify(clientData));
+                    loadData();
+                }
+            });
+        }
+
+        function completeProject(id) {
+            const client = clientData.find(c => c.id === id);
+            if (!client || client.status === 'completed') return;
+
+            const amount = prompt('Introduce el importe a facturar (€):', '300');
+            if (amount === null) return;
+
+            const concept = prompt('Concepto de la factura:', 'Servicios de consultoría');
+            if (concept === null) return;
+
+            const completedDate = new Date().toLocaleString('es-ES');
+
+            // Update Firebase
+            Promise.all([
+                db.collection('waitingList').doc(id).update({
+                    status: 'completed',
+                    completedDate: completedDate
+                }),
+                db.collection('billingData').add({
+                    invoiceNumber: getNextInvoiceNumber(),
+                    clientId: id,
+                    clientName: client.name,
+                    clientEmail: client.email,
+                    clientPhone: client.phone,
+                    amount: parseFloat(amount) || 300,
+                    concept: concept,
+                    completedDate: completedDate,
+                    registrationDate: client.timestamp,
+                    status: 'pendiente_factura',
+                    createdAt: new Date()
+                })
+            ]).then(() => {
+                loadData();
+                alert(`✅ Proyecto completado y añadido a facturación\n💰 Importe: ${amount}€`);
+            }).catch(error => {
+                // Fallback to localStorage
+                client.status = 'completed';
+                client.completedDate = completedDate;
+
+                const billingRecord = {
+                    id: Date.now(),
+                    invoiceNumber: getNextInvoiceNumber(),
+                    clientId: client.id,
+                    clientName: client.name,
+                    clientEmail: client.email,
+                    clientPhone: client.phone,
+                    amount: parseFloat(amount) || 300,
+                    concept: concept,
+                    completedDate: completedDate,
+                    registrationDate: client.timestamp,
+                    status: 'pendiente_factura'
+                };
+
+                billingData.push(billingRecord);
+                localStorage.setItem('waitingList', JSON.stringify(clientData));
+                localStorage.setItem('billingData', JSON.stringify(billingData));
+
+                loadData();
+                alert(`✅ Proyecto completado y añadido a facturación\n💰 Importe: ${amount}€`);
+            });
+        }
+
+        function getNextInvoiceNumber() {
+            const currentYear = new Date().getFullYear();
+            const yearBillings = billingData.filter(b =>
+                b.invoiceNumber && b.invoiceNumber.startsWith(currentYear.toString())
+            );
+            const nextNumber = yearBillings.length + 1;
+            return `${currentYear}-${nextNumber.toString().padStart(3, '0')}`;
+        }
+
+        function removeClient(id) {
+            if (confirm('¿Estás seguro de eliminar este cliente? Esta acción no se puede deshacer.')) {
+                db.collection('waitingList').doc(id).delete().then(() => {
+                    loadData();
+                }).catch(error => {
+                    // Fallback to localStorage
+                    clientData = clientData.filter(c => c.id !== id);
+                    localStorage.setItem('waitingList', JSON.stringify(clientData));
+                    loadData();
+                });
+            }
+        }
+
+        function clearAllData() {
+            if (confirm('¿ELIMINAR TODOS LOS DATOS? Esta acción es irreversible.')) {
+                if (confirm('CONFIRMACIÓN FINAL: Se perderán todos los registros permanentemente.')) {
+                    const deletePromises = [];
+
+                    clientData.forEach(client => {
+                        deletePromises.push(db.collection('waitingList').doc(client.id).delete());
+                    });
+
+                    Promise.all(deletePromises).then(() => {
+                        loadData();
+                        alert('Todos los datos han sido eliminados.');
+                    }).catch(error => {
+                        // Fallback to localStorage
+                        localStorage.removeItem('waitingList');
+                        loadData();
+                    });
+                }
+            }
+        }
+
+        function exportToCSV() {
+            if (clientData.length === 0) {
+                alert('No hay datos para exportar.');
+                return;
+            }
+
+            const headers = ['Nombre', 'Email', 'Teléfono', 'Comentarios', 'Estado', 'Fecha de Registro', 'Posición'];
+            const csvContent = [
+                headers.join(','),
+                ...clientData.map((client, index) => [
+                    `"${client.name || ''}"`,
+                    `"${client.email || ''}"`,
+                    `"${client.phone || ''}"`,
+                    `"${client.comments || ''}"`,
+                    `"${getStatusText(client.status)}"`,
+                    `"${client.timestamp || ''}"`,
+                    `"${index + 1}"`
+                ].join(','))
+            ].join('\n');
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `clientes-${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function exportBillingToExcel() {
+            if (billingData.length === 0) {
+                alert('No hay datos de facturación para exportar.');
+                return;
+            }
+
+            let htmlContent = `
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #000; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <table>
+        <tr>
+            <th>Nº Factura</th>
+            <th>Fecha Completado</th>
+            <th>Nombre Cliente</th>
+            <th>Email</th>
+            <th>Teléfono</th>
+            <th>Importe (€)</th>
+            <th>Concepto</th>
+            <th>Estado</th>
+            <th>Fecha Registro</th>
+        </tr>
+`;
+
+            const sortedBilling = [...billingData].sort((a, b) => (b.invoiceNumber || '').localeCompare(a.invoiceNumber || ''));
+
+            sortedBilling.forEach(bill => {
+                htmlContent += `
+        <tr>
+            <td>${bill.invoiceNumber || 'Sin número'}</td>
+            <td>${bill.completedDate || 'Sin fecha'}</td>
+            <td>${(bill.clientName || 'Sin nombre').replace(/[<>&"']/g, '')}</td>
+            <td>${(bill.clientEmail || 'Sin email').replace(/[<>&"']/g, '')}</td>
+            <td>${(bill.clientPhone || 'Sin teléfono').replace(/[<>&"']/g, '')}</td>
+            <td>${bill.amount || '0'}</td>
+            <td>${(bill.concept || 'Sin concepto').replace(/[<>&"']/g, '')}</td>
+            <td>${bill.status === 'pendiente_factura' ? 'Pendiente' : bill.status}</td>
+            <td>${bill.registrationDate || 'Sin fecha'}</td>
+        </tr>
+`;
+            });
+
+            htmlContent += `
+    </table>
+</body>
+</html>
+`;
+
+            const blob = new Blob([htmlContent], {
+                type: 'application/vnd.ms-excel'
+            });
+
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            const today = new Date().toISOString().split('T')[0];
+
+            link.setAttribute('href', url);
+            link.setAttribute('download', `Facturacion_${today.replace(/-/g, '_')}.xls`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            alert(`✅ Excel exportado correctamente\n📊 ${billingData.length} facturas incluidas`);
+        }
+
+        function setFilter(status) {
+            // Update active button
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            currentFilter = status;
+            applyCurrentFilter();
+            renderClients();
+        }
+
+        function applyCurrentFilter() {
+            if (currentFilter === 'all') {
+                filteredData = [...clientData];
+            } else {
+                filteredData = clientData.filter(client => client.status === currentFilter);
+            }
+
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            if (searchQuery) {
+                filteredData = filteredData.filter(client =>
+                    client.name.toLowerCase().includes(searchQuery) ||
+                    client.email.toLowerCase().includes(searchQuery) ||
+                    client.phone.includes(searchQuery) ||
+                    (client.comments && client.comments.toLowerCase().includes(searchQuery))
+                );
+            }
+        }
+
+        function refreshData() {
+            loadData();
+            const fab = document.querySelector('.fab');
+            fab.style.transform = 'rotate(360deg) scale(1.1)';
+            setTimeout(() => {
+                fab.style.transform = 'rotate(0deg) scale(1)';
+            }, 600);
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            applyCurrentFilter();
+            renderClients();
+        });
+
+        // Event delegation for dynamic content
+        document.addEventListener('click', function(e) {
+            // Handle client action buttons
+            if (e.target.classList.contains('client-contact-btn')) {
+                const clientCard = e.target.closest('.client-card');
+                const clientId = getClientIdFromCard(clientCard);
+                if (clientId) changeStatus(clientId, 'contacted');
+            }
+
+            if (e.target.classList.contains('client-complete-btn')) {
+                const clientCard = e.target.closest('.client-card');
+                const clientId = getClientIdFromCard(clientCard);
+                if (clientId) completeProject(clientId);
+            }
+
+            if (e.target.classList.contains('client-remove-btn')) {
+                const clientCard = e.target.closest('.client-card');
+                const clientId = getClientIdFromCard(clientCard);
+                if (clientId) removeClient(clientId);
+            }
+        });
+
+        function getClientIdFromCard(card) {
+            if (!card) return null;
+            const nameElement = card.querySelector('.client-main-info h3');
+            if (!nameElement) return null;
+            const name = nameElement.textContent;
+            const client = clientData.find(c => c.name === name);
+            return client ? client.id : null;
+        }
+
+        // Load data when page loads
+        document.addEventListener('DOMContentLoaded', loadData);
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadData, 30000);
+    </script>
+</body>
+</html>

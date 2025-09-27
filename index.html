@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Espera | Oportunidad Exclusiva</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a202c 40%, #2d3748 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #1a1a2e;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(0, 102, 204, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 165, 0, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .floating-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .particle:nth-child(1) { width: 4px; height: 4px; left: 10%; animation-delay: 0s; }
+        .particle:nth-child(2) { width: 6px; height: 6px; left: 70%; animation-delay: 7s; }
+        .particle:nth-child(3) { width: 3px; height: 3px; left: 50%; animation-delay: 14s; }
+        .particle:nth-child(4) { width: 5px; height: 5px; left: 30%; animation-delay: 3s; }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow:
+                0 32px 64px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            max-width: 620px;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #0066cc 0%, #ff8800 50%, #0066cc 100%);
+            background-size: 200% 100%;
+            animation: slide 4s ease-in-out infinite;
+        }
+
+        @keyframes slide {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f1419 0%, #1a202c 100%);
+            padding: 60px 40px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 30% 20%, rgba(0, 102, 204, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255, 165, 0, 0.15) 0%, transparent 50%);
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
+            text-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header p {
+            font-size: 1.4rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-container {
+            padding: 50px 40px 40px;
+            background: linear-gradient(145deg, #fafafa 0%, #ffffff 100%);
+        }
+
+        .trust-indicators {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .trust-item {
+            padding: 30px 20px;
+            border-radius: 16px;
+            background: linear-gradient(145deg, #ffffff 0%, #f8fafc 100%);
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            position: relative;
+            transition: all 0.4s ease;
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.08),
+                0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .trust-item::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 1px;
+            background: linear-gradient(135deg, #0066cc, #ff8800);
+            border-radius: inherit;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: xor;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .trust-item:hover::before {
+            opacity: 1;
+        }
+
+        .trust-item:hover {
+            transform: translateY(-8px);
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.15),
+                0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .trust-number {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #0066cc, #ff8800);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .trust-label {
+            font-size: 1rem;
+            color: #4a5568;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+
+        .info-section {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border: 1px solid #e2e8f0;
+            padding: 40px;
+            margin-bottom: 40px;
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+        }
+
+        .info-section::before {
+            content: '🎯';
+            position: absolute;
+            top: -15px;
+            right: 25px;
+            font-size: 2.5rem;
+            background: white;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 3px solid #f7fafc;
+        }
+
+        .info-section h3 {
+            color: #1a202c;
+            margin-bottom: 24px;
+            font-size: 1.6rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .info-section p {
+            color: #4a5568;
+            line-height: 1.8;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .more-info-btn {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 20px;
+            padding: 14px 28px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0, 102, 204, 0.3);
+        }
+
+        .more-info-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 102, 204, 0.4);
+            background: linear-gradient(135deg, #0052a3 0%, #003366 100%);
+        }
+
+        .detailed-info {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 35px;
+            margin-top: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .detailed-info h4 {
+            color: #1a202c;
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .detailed-info h4::before {
+            content: '💡';
+            font-size: 1.5rem;
+        }
+
+        .detailed-info p {
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 16px;
+            margin-top: 25px;
+            box-shadow: 0 8px 32px rgba(26, 32, 44, 0.3);
+            text-align: center;
+            border: 1px solid #4a5568;
+        }
+
+        .highlight-box strong {
+            font-size: 1.15rem;
+            color: #ffa500;
+        }
+
+        .form-group {
+            margin-bottom: 32px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 1.05rem;
+            position: relative;
+        }
+
+        .required-field::after {
+            content: ' *';
+            color: #0066cc;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 18px 24px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            background: linear-gradient(145deg, #ffffff 0%, #f7fafc 100%);
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #0066cc;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(0, 102, 204, 0.1);
+            transform: translateY(-1px);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #0066cc 0%, #ff8800 100%);
+            background-size: 200% 200%;
+            color: white;
+            border: none;
+            padding: 20px 32px;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            letter-spacing: 0.5px;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 102, 204, 0.3);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        .submit-btn:hover {
+            background-position: 100% 0;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 102, 204, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .success-message {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: none;
+            font-weight: 600;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(72, 187, 120, 0.3);
+        }
+
+        .position-info {
+            background: linear-gradient(135deg, #0066cc 0%, #004499 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 30px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 8px 32px rgba(0, 102, 204, 0.3);
+        }
+
+        .admin-link {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 2px solid #f0f4f8;
+        }
+
+        .admin-link a {
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+
+        .admin-link a:hover {
+            background: rgba(0, 102, 204, 0.1);
+            color: #004499;
+        }
+
+        .pulse {
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        /* Mobile Optimizations */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                margin: 0;
+                border-radius: 16px;
+                max-width: 100%;
+            }
+
+            .header {
+                padding: 40px 25px;
+            }
+
+            .header h1 {
+                font-size: 2.2rem;
+                line-height: 1.1;
+                margin-bottom: 12px;
+            }
+
+            .header p {
+                font-size: 1.1rem;
+                line-height: 1.3;
+            }
+
+            .form-container {
+                padding: 30px 25px 25px;
+            }
+
+            .trust-indicators {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-bottom: 30px;
+            }
+
+            .trust-item {
+                padding: 25px 20px;
+            }
+
+            .trust-number {
+                font-size: 2.2rem;
+            }
+
+            .trust-label {
+                font-size: 0.95rem;
+            }
+
+            .info-section {
+                padding: 25px 20px;
+                margin-bottom: 30px;
+            }
+
+            .info-section::before {
+                width: 55px;
+                height: 55px;
+                font-size: 2rem;
+                top: -12px;
+                right: 15px;
+            }
+
+            .info-section h3 {
+                font-size: 1.4rem;
+                margin-bottom: 18px;
+                line-height: 1.2;
+            }
+
+            .info-section p {
+                font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: 14px;
+            }
+
+            .more-info-btn {
+                width: 100%;
+                padding: 16px 24px;
+                font-size: 16px;
+                margin-top: 20px;
+            }
+
+            .detailed-info {
+                padding: 25px 20px;
+                margin-top: 20px;
+            }
+
+            .detailed-info h4 {
+                font-size: 1.3rem;
+                margin-bottom: 20px;
+                line-height: 1.2;
+            }
+
+            .detailed-info p {
+                font-size: 1rem;
+                line-height: 1.7;
+                margin-bottom: 18px;
+            }
+
+            .highlight-box {
+                padding: 25px 20px;
+                margin-top: 20px;
+            }
+
+            .form-group {
+                margin-bottom: 28px;
+            }
+
+            label {
+                font-size: 1rem;
+                margin-bottom: 10px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            textarea {
+                padding: 16px 20px;
+                font-size: 16px;
+                border-radius: 10px;
+            }
+
+            textarea {
+                min-height: 110px;
+            }
+
+            .submit-btn {
+                padding: 18px 28px;
+                font-size: 17px;
+                border-radius: 12px;
+            }
+
+            .success-message {
+                padding: 20px;
+                font-size: 15px;
+                margin-bottom: 25px;
+            }
+
+            .position-info {
+                padding: 18px;
+                font-size: 1rem;
+                margin-top: 25px;
+            }
+
+            .admin-link {
+                margin-top: 30px;
+                padding-top: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+
+            .container {
+                border-radius: 12px;
+            }
+
+            .header {
+                padding: 30px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.9rem;
+            }
+
+            .header p {
+                font-size: 1rem;
+            }
+
+            .form-container {
+                padding: 25px 20px 20px;
+            }
+
+            .trust-item {
+                padding: 20px 15px;
+            }
+
+            .trust-number {
+                font-size: 2rem;
+            }
+
+            .info-section {
+                padding: 20px 18px;
+            }
+
+            .info-section h3 {
+                font-size: 1.25rem;
+                margin-bottom: 16px;
+            }
+
+            .info-section p {
+                font-size: 0.95rem;
+            }
+
+            .detailed-info {
+                padding: 20px 18px;
+            }
+
+            .detailed-info h4 {
+                font-size: 1.2rem;
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+
+            .highlight-box {
+                padding: 20px 18px;
+            }
+
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            textarea {
+                padding: 14px 18px;
+                font-size: 16px;
+            }
+
+            .submit-btn {
+                padding: 16px 24px;
+                font-size: 16px;
+            }
+        }
+
+        /* WhatsApp Browser Specific */
+        @media screen and (max-width: 768px) {
+            /* Ensure touch targets are at least 44px */
+            .more-info-btn,
+            .submit-btn,
+            input,
+            textarea {
+                min-height: 44px;
+            }
+
+            /* Prevent zoom on input focus */
+            input[type="text"],
+            input[type="email"],
+            input[type="tel"],
+            textarea {
+                font-size: 16px !important;
+            }
+
+            /* Better spacing for thumb navigation */
+            .trust-item:hover {
+                transform: none;
+            }
+
+            /* Reduce complex animations on mobile */
+            .floating-particles {
+                display: none;
+            }
+
+            .container::before {
+                animation: none;
+                background: linear-gradient(90deg, #0066cc 0%, #ff8800 100%);
+            }
+
+            /* Optimize for slower mobile connections */
+            * {
+                animation-duration: 0.2s !important;
+                transition-duration: 0.2s !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>Oportunidad Exclusiva</h1>
+            <p>Ingresos Inteligentes • Resultados Garantizados</p>
+        </div>
+
+        <div class="form-container">
+            <div class="trust-indicators">
+                <div class="trust-item">
+                    <div class="trust-number">300€</div>
+                    <div class="trust-label">Ganancia Promedio</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-number">0€</div>
+                    <div class="trust-label">Tu Inversión</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-number">10</div>
+                    <div class="trust-label">Clientes/Mes</div>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>Método Inteligente de Ingresos</h3>
+                <p>Sistema probado que aprovecha oportunidades legales del mercado para generar beneficios consistentes. Sin riesgos para ti, con resultados garantizados.</p>
+                <p><strong>Lo mejor:</strong> No necesitas capital inicial. Nosotros proporcionamos todo lo necesario mientras tú obtienes las ganancias.</p>
+                <button class="more-info-btn" onclick="toggleDetailedInfo()">Ver cómo funciona</button>
+                <div class="detailed-info" id="detailedInfo">
+                    <h4>Proceso Paso a Paso</h4>
+
+                    <p><strong>🎯 El Sistema:</strong> Utilizamos bonos de bienvenida de plataformas de forma estratégica y completamente legal. Los beneficios se dividen equitativamente al 50%.</p>
+
+                    <p><strong>💰 Tus Ganancias:</strong> Entre 250€ y 350€ por proceso completado. El promedio está en 300€ netos para ti.</p>
+
+                    <p><strong>💳 Capital Necesario:</strong> Cero euros de tu parte. Proporcionamos todo el capital operativo necesario para el proceso.</p>
+
+                    <p><strong>📱 Tu Participación:</strong> Registros online en plataformas que te indicamos. Proceso guiado paso a paso por nuestro equipo.</p>
+
+                    <p><strong>⚡ Requisito Importante:</strong> Comunicación ágil y respuestas rápidas. Los retrasos en comunicación resultan en reasignación a siguiente candidato.</p>
+
+                    <p><strong>📊 Estructura de Pagos:</strong> Transferencias progresivas de aproximadamente 50€ por cada plataforma completada exitosamente.</p>
+
+                    <p><strong>🎯 Capacidad Limitada:</strong> Máximo 10 participantes mensuales para garantizar atención personalizada y resultados óptimos.</p>
+
+                    <div class="highlight-box">
+                        <p><strong>¿Por qué es rentable?</strong> Las plataformas invierten en bonos para adquisición de usuarios. Nosotros optimizamos este proceso de forma inteligente, generando valor para todas las partes sin riesgo financiero.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="success-message" id="successMessage">
+                ✓ Registro completado exitosamente. Nuestro equipo te contactará próximamente con los detalles del proceso.
+            </div>
+
+            <form id="waitingListForm">
+                <div class="form-group">
+                    <label for="name" class="required-field">Nombre Completo</label>
+                    <input type="text" id="name" name="name" placeholder="Ej: Carlos Ruiz García" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="required-field">Email de Contacto</label>
+                    <input type="email" id="email" name="email" placeholder="tu.email@ejemplo.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone" class="required-field">Número de WhatsApp</label>
+                    <input type="tel" id="phone" name="phone" placeholder="600 123 456" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="comments">Comentarios Adicionales</label>
+                    <textarea id="comments" name="comments" placeholder="Preguntas, disponibilidad horaria, experiencia previa..."></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Solicitar Acceso Inmediato
+                </button>
+            </form>
+
+            <div class="position-info" id="positionInfo" style="display: none;">
+                Posición #<span id="positionNumber"></span> en la lista de espera
+            </div>
+
+            <div class="admin-link">
+                <a href="#" onclick="toggleAdmin()">Panel de Administración</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZTb22-_5E6BE9uGC9Z7oXPbD79yoosV0",
+            authDomain: "lista-espera-clientes.firebaseapp.com",
+            projectId: "lista-espera-clientes",
+            storageBucket: "lista-espera-clientes.firebasestorage.app",
+            messagingSenderId: "485464157193",
+            appId: "1:485464157193:web:7cc7af333678a229e6dcd8"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let waitingList = [];
+
+        // Load from Firebase
+        async function loadFromFirebase() {
+            try {
+                const snapshot = await db.collection('waitingList').get();
+                waitingList = [];
+                snapshot.forEach((doc) => {
+                    waitingList.push({ id: doc.id, ...doc.data() });
+                });
+            } catch (error) {
+                console.log('Using localStorage fallback');
+                waitingList = JSON.parse(localStorage.getItem('waitingList')) || [];
+            }
+        }
+
+        document.getElementById('waitingListForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                comments: document.getElementById('comments').value,
+                timestamp: new Date().toLocaleString('es-ES'),
+                status: 'pending',
+                createdAt: new Date()
+            };
+
+            // Check if email already exists
+            await loadFromFirebase();
+            if (waitingList.some(person => person.email === formData.email)) {
+                alert('Esta dirección de email ya está registrada en nuestra lista de espera.');
+                return;
+            }
+
+            try {
+                // Try Firebase first
+                await db.collection('waitingList').add(formData);
+            } catch (error) {
+                // Fallback to localStorage
+                waitingList.push({ id: Date.now(), ...formData });
+                localStorage.setItem('waitingList', JSON.stringify(waitingList));
+            }
+
+            document.getElementById('successMessage').style.display = 'block';
+
+            const position = waitingList.filter(p => p.status === 'pending').length + 1;
+            document.getElementById('positionNumber').textContent = position;
+            document.getElementById('positionInfo').style.display = 'block';
+
+            this.reset();
+
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 8000);
+        });
+
+        function toggleAdmin() {
+            const password = prompt('Introduce la contraseña de administrador:');
+            if (password === 'admin123') {
+                window.location.href = 'dashboard.html';
+            } else if (password !== null) {
+                alert('Contraseña incorrecta');
+            }
+        }
+
+        function toggleDetailedInfo() {
+            const info = document.getElementById('detailedInfo');
+            const btn = document.querySelector('.more-info-btn');
+
+            if (info.style.display === 'none' || info.style.display === '') {
+                info.style.display = 'block';
+                btn.textContent = 'Ocultar detalles';
+                btn.style.background = 'linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)';
+            } else {
+                info.style.display = 'none';
+                btn.textContent = 'Ver cómo funciona';
+                btn.style.background = 'linear-gradient(135deg, #0066cc 0%, #004499 100%)';
+            }
+        }
+
+        window.addEventListener('load', async function() {
+            await loadFromFirebase();
+            const pendingCount = waitingList.filter(p => p.status === 'pending').length;
+            if (pendingCount > 0) {
+                document.querySelector('.info-section p:last-of-type').innerHTML +=
+                    `<br><br><em style="color: #0066cc; font-weight: 600;">Actualmente ${pendingCount} personas en lista de espera.</em>`;
+            }
+        });
+
+        // Efecto de typing en el título
+        document.addEventListener('DOMContentLoaded', function() {
+            const title = document.querySelector('.header h1');
+            const text = title.textContent;
+            title.textContent = '';
+
+            let i = 0;
+            const typeWriter = () => {
+                if (i < text.length) {
+                    title.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 80);
+                }
+            };
+
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+</html>
